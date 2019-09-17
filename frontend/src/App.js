@@ -1,38 +1,39 @@
-import React, { Component } from "react";
-import "./App.css";
+import React, { Component } from 'react';
+import './App.css';
 import { connect, sendMsg } from "./api";
-import Header from './components/Header/Header';
-import ChatHistory from "./components/ChatHistory/ChatHistory";
+import Header from './components/Header/Header.jsx';
+import ChatInput from './components/ChatInput/ChatInput.jsx'
+import ChatHistory from './components/ChatHistory/ChatHistory.jsx';
 
 class App extends Component{
   constructor(props) {
     super(props);
-    this.state = {ChatHistory: []}; 
+    this.state = {chatHistory: []}; 
   }
 
   componentDidMount() {
     connect((msg) => {
       console.log("New message");
       this.setState(prevState => ({
-        ChatHistory: [...this.state.ChatHistory, msg]
+        chatHistory: [...prevState.chatHistory, msg]
       }))
       console.log(this.state);
     })
   }
 
-  send() {
-    console.log("hello");
-    sendMsg("hello");
+  send(event) {
+    if (event.keyCode === 13) {
+      sendMsg(event.target.value);
+      event.target.value = '';
+    }
   }
 
   render() {
     return (
       <div className="App">
         <Header/>
-        <ChatHistory ChatHistory={this.state.ChatHistory} />
-        <button onClick={this.send}>
-          Hit
-        </button>
+        <ChatHistory chatHistory={this.state.chatHistory} />
+        <ChatInput send={this.send}/>
       </div>
     );
   }
