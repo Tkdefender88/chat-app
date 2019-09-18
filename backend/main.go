@@ -11,6 +11,8 @@ func setupRoutes() {
 	pool := websocket.NewPool()
 	go pool.Start()
 
+	http.Handle("/", http.FileServer(http.Dir("../frontend/build/")))
+
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(pool, w, r)
 	})
